@@ -1,0 +1,206 @@
+<!--
+Xiegu G-106 RigCAT definitions for use with fldigi
+
+Version history:
+  1.0	21.07.2023	Initial version
+  1.1	22.10.2023	Bug fixes for GETMODE, missing LSBMODES
+  
+Please note the followings:
+Firmware version 1.3 must be installed on the radio!
+
+As Fldigi is not polling the radio during TX, the CAT PTT command is not
+working! After 2 seconds the radio will switch back to RX in accordance with
+the original G106 CAT manual. Therefore, depending on the interface hardware,
+only PTT via RTS or CTS works!
+
+See you on my fldigi waterfall!
+
+73! de HA3MGA Gabor
+-->
+<RIGDEF>
+	<RIG>Xiegu G106</RIG>
+
+	<PROGRAMMER>
+		Gabor Molnar HA3MGA
+	</PROGRAMMER>
+
+	<STATUS>
+		Verified
+		Version:	1.1
+		Date:		22.10.2023
+	</STATUS>
+
+	<TITLE>RigCAT - Xiegu G106 v1.1</TITLE>
+
+	<TIMEOUT>50</TIMEOUT>
+	<RETRIES>2</RETRIES>
+	<WRITE_DELAY>0</WRITE_DELAY>
+	<INIT_DELAY>0</INIT_DELAY>
+	<BAUDRATE>19200</BAUDRATE>
+	<STOPBITS>2</STOPBITS>
+	<RTSCTS>false</RTSCTS>
+	<RTSPLUS>false</RTSPLUS>
+	<RTSPTT>true</RTSPTT>
+	<DTRPLUS>false</DTRPLUS>
+	<DTRPTT>false</DTRPTT>
+	<CMDPTT>false</CMDPTT>
+	<ECHO>true</ECHO> 
+	<VSP>false</VSP> 
+
+	<MODES>
+		<ELEMENT><SYMBOL>LSB</SYMBOL><BYTES>00 00 01</BYTES></ELEMENT>
+		<ELEMENT><SYMBOL>L-D</SYMBOL><BYTES>00 01 01</BYTES></ELEMENT>
+		<ELEMENT><SYMBOL>USB</SYMBOL><BYTES>01 00 01</BYTES></ELEMENT>
+		<ELEMENT><SYMBOL>U-D</SYMBOL><BYTES>01 01 01</BYTES></ELEMENT>
+		<ELEMENT><SYMBOL>AM</SYMBOL><BYTES>02 00 01</BYTES></ELEMENT>
+		<ELEMENT><SYMBOL>CW</SYMBOL><BYTES>03 00 01</BYTES></ELEMENT>
+	</MODES>
+
+	<LSBMODES>
+		<STRING>LSB<STRING>
+		<STRING>L-D<STRING>
+	</LSBMODES>
+
+	<REPLY>
+		<SYMBOL>OK</SYMBOL>
+		<SIZE>6</SIZE>
+		<BYTES>FE FE E0 90</BYTES>
+		<BYTE>FB</BYTE>
+		<BYTE>FD</BYTE>
+	</REPLY>
+
+	<REPLY>
+		<SYMBOL>BAD</SYMBOL>
+		<SIZE>6</SIZE>
+		<BYTES>FE FE E0 90</BYTES>
+		<BYTE>FA</BYTE>
+		<BYTE>FD</BYTE>
+	</REPLY>
+
+	<REPLY>
+		<SYMBOL>MODE</SYMBOL>
+		<SIZE>10</SIZE>
+		<BYTES>FE FE E0 90</BYTES>
+		<BYTES>26 00</BYTES>
+		<DATA>
+			<DTYPE>BINARY</DTYPE>
+			<SIZE>3</SIZE>
+		</DATA>
+		<BYTES>FD</BYTES>
+	</REPLY>
+
+	<REPLY>
+		<SYMBOL>FREQ</SYMBOL>
+		<SIZE>11</SIZE>
+		<BYTES>FE FE E0 90</BYTES>
+		<BYTE>03</BYTE>
+		<DATA>
+			<DTYPE>BCD</DTYPE>
+			<SIZE>9</SIZE>
+			<MAX>30000000</MAX>
+			<MIN>500000</MIN>
+			<RESOL>1</RESOL>
+			<REV>true</REV>
+		</DATA>
+		<BYTE>FD</BYTE>
+	</REPLY>	
+
+
+	<COMMAND>
+		<SYMBOL>SETFREQ</SYMBOL>
+		<SIZE>11</SIZE>
+		<BYTES>FE FE 90 E0</BYTES>
+		<BYTE>05</BYTE>
+		<DATA>
+			<DTYPE>BCD</DTYPE>
+			<SIZE>9</SIZE>
+			<MAX>30000000</MAX>
+			<MIN>500000</MIN>
+			<RESOL>1</RESOL>
+			<REV>true</REV>
+		</DATA>
+		<BYTE>FD</BYTE>
+		<OK>OK</OK>
+		<BAD>BAD</BAD>
+	</COMMAND>
+
+	<COMMAND>
+		<SYMBOL>GETFREQ</SYMBOL>
+		<SIZE>6</SIZE>
+		<BYTES>FE FE 90 E0</BYTES>
+		<BYTE>03</BYTE>
+		<BYTE>FD</BYTE>
+		<INFO>FREQ</INFO>
+	</COMMAND>
+
+	<COMMAND>
+		<SYMBOL>SETMODE</SYMBOL>
+		<SIZE>10</SIZE>
+		<BYTES>FE FE 90 E0</BYTES>
+		<BYTES>26 00</BYTES>
+		<DATA>
+			<DTYPE>BINARY</DTYPE>
+			<SIZE>3</SIZE>
+		</DATA>
+		<BYTES>FD</BYTES>
+		<OK>OK</OK>
+		<BAD>BAD</BAD>
+	</COMMAND>
+	
+	<COMMAND>
+		<SYMBOL>GETMODE</SYMBOL>
+		<SIZE>8</SIZE>
+		<BYTES>FE FE 90 E0</BYTES>
+		<BYTES>26 00</BYTES>
+		<FILL>3</FILL>
+		<BYTE>FD</BYTE>
+		<INFO>MODE</INFO>
+	</COMMAND>
+
+	<COMMAND>
+		<SYMBOL>PTTON</SYMBOL>
+		<SIZE>8</SIZE>
+		<BYTES>FE FE 90 E0</BYTES>
+		<BYTES>1C 00 01</BYTES>
+		<BYTE>FD</BYTE>
+		<OK>OK</OK>
+		<BAD>BAD</BAD>
+	</COMMAND>
+
+	<COMMAND>
+		<SYMBOL>PTTOFF</SYMBOL>
+		<SIZE>8</SIZE>
+		<BYTES>FE FE 90 E0</BYTES>
+		<BYTES>1C 00 00</BYTES>
+		<BYTE>FD</BYTE>
+		<OK>OK</OK>
+		<BAD>BAD</BAD>
+	</COMMAND>
+
+	<COMMAND>
+		<SYMBOL>GET_SMETER</SYMBOL>
+		<SIZE>7</SIZE>
+		<BYTES>FE FE 94 E0 15 02 FD</BYTES>
+		<INFO>SMETER</INFO>
+	</COMMAND>
+
+	<PMETER> 0, 0; 49, 12; 74, 20; 89, 25; 103, 30; 124, 40; 143, 50; 183, 75; 213, 100; 255, 120 </PMETER>
+	<!--  smeter scale mapping  -->
+	<SMETER> 0,0; 255,100 </SMETER>
+
+	<REPLY>
+		<SYMBOL>SMETER</SYMBOL>
+		<SIZE>9</SIZE>
+		<BYTES>FE FE E0 94 15 02</BYTES>
+		<DATA>
+			<DTYPE>BCD</DTYPE>
+			<SIZE>3</SIZE>
+			<MAX>255</MAX>
+			<MIN>0</MIN>
+			<RESOL>1</RESOL>
+			<REV>false</REV>
+		</DATA>
+		<BYTE>FD</BYTE>
+	</REPLY>
+
+</RIGDEF>
